@@ -8,7 +8,7 @@ port(
 	clk : in std_logic;
 	reset : in std_logic;
 	enable : in std_logic;
-	count : in std_logic_vector(3 downto 0) 
+	count : out std_logic_vector(3 downto 0) 
 );
 end counter;
 
