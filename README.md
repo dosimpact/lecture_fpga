@@ -206,5 +206,164 @@ entity fpga00_TB is
 
 - 이역시, 문법 오류 확인 및 컴파일하기
 - 모델심 프로젝트 생성 및 위 두개 파일 모두 임포트
+- 모두 컴파일
+- 시뮬레이션 시작 > work > test 코드 실행
 - 입력 웨이브 추가
 - run 1us // 1초동안 실행시키기
+
+# 5주차
+
+## Half Adder
+
+```c#
+ENTITY half_adder IS
+PORT(
+	A,B:IN BIT;
+	S,C:OUT BIT
+);
+END half_adder;
+
+ARCHITECTURE ADDER OF half_adder IS
+BEGIN
+
+PROCESS(A,B)
+BEGIN
+	IF A=B THEN
+		S<='0';
+	ELSE
+		S<='1';
+	END IF;
+END PROCESS;
+
+PROCESS(A,B)
+BEGIN
+	IF A = '1' AND B = '1' THEN
+		C<='1';
+	ELSE
+		C<='0';
+	END IF;
+END PROCESS;
+
+END ADDER;
+
+```
+
+## Full-Adder
+
+```c#
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+
+entity counter is
+port(
+	clk : in std_logic;
+	reset : in std_logic;
+	enable : in std_logic;
+	count : out ENTITY Full_adder IS
+	PORT(
+		A,B,CIN:IN BIT;
+		S,COUT:OUT BIT
+	);
+	END Full_adder;
+
+	ARCHITECTURE ADDER OF Full_adder IS
+		COMPONENT half_adder IS
+		PORT(
+		A,B:IN BIT;
+		S,C:OUT BIT
+		);
+		END COMPONENT;
+
+		SIGNAL REG_C1,REG_C2 : BIT;
+		SIGNAL REG_SUM : BIT;
+	BEGIN
+	U1_HA: half_adder
+	PORT MAP(
+		A=>A,
+		B=>B,
+		S=> REG_SUM,
+		C=>REG_C1
+	);
+
+	U2_HA: half_adder
+	PORT MAP(
+		A=>CIN,
+		B=>REG_SUM,
+		S=> S,
+		C=>REG_C2
+	);
+
+	COUT <=REG_C1 OR REG_C2;
+
+	END ADDER;
+	(3 downto 0)
+);
+end counter;
+
+
+architecture behav of counter is
+signal pre_count: std_logic_vector(3 downto 0);
+begin
+	process(clk, enable, reset)
+	begin
+		if reset = '1' then
+			pre_count <= "0000";
+		elsif (clk='1' and clk'event) then
+            if enable = '1' then
+                pre_count <= pre_count + "1";
+            end if;
+        end if
+    end process;
+    count <= pre_count;
+end behave
+```
+
+## Test
+
+```c#
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+ENTITY TEST IS
+END TEST;
+
+ARCHITECTURE ADDER OF TEST IS
+
+COMPONENT Full_adder
+PORT(
+	A,B,CIN:IN BIT;
+	S,COUT:OUT BIT
+);
+END COMPONENT;
+
+SIGNAL A,B : BIT := '0';
+SIGNAL CIN : BIT := '0';
+SIGNAL S,COUT : BIT := '0';
+
+BEGIN
+
+A<= '0', '1'AFTER 200NS, '0'AFTER 400NS,
+	'1'AFTER 600NS, '0'AFTER 800NS
+	, '1'AFTER 1000NS, '0'AFTER 1200NS
+	 , '1'AFTER 1400NS;
+B<='0', '1'AFTER 400NS, '0'AFTER 800NS,
+	'1'AFTER 1200NS;
+CIN<= '0', '1'AFTER 800NS;
+
+U_TEST: full_adder
+PORT MAP(
+	A=>A,
+	B=>B,
+	CIN=>CIN,
+	S=>S,
+	COUT=>COUT
+);
+END ADDER;
+
+
+
+
+```
