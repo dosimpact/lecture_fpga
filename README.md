@@ -73,6 +73,8 @@ case latent_space is
         G <= latent_space
     when d =>
         D <= G(latent_space)
+	when others =>
+		...
 end case;
 ```
 
@@ -127,90 +129,6 @@ begin
 end behave
 ```
 
-# 3 주차
-
-## ASIC = application-specific intergrated circuit
-
-- 사용자의 주문에 맞추어 설계 제작 해주는 반도체를 말함. 아씩
-- 장점은, 맞춤형이므로 속도,크기,전력소모,성능이 고도화됨
-- 단점은, 비용,시간,설계능력이 많이 소모
-
-- 풀커스텀 > 세미 커스텀 > 프로그래머블 의 단계가 있다.
-
-- 풀커스텀은 소수의 IC만 설계한다. 미리 검증된 논리셀보다 시간적 성능적 비용이 크다.
-
-- 세미 커스텀방식의, Cell-based ASIC 은 표준 논리 셀을 사용한다. | 표준 셀의 배치와 연결을 정의, 표준 셀 라이브러리 구매해야함.
-
-- PLD > Programable Logic Device의 약자 : 제조후에 사용자가 내부 논리회로의 구조를 변경할 수 있는 직접회로이다.
-- eg) ROM, FPGA (field programmable Gate Array), 등이 있다.
-
-# 4 주차
-
-## 1. 간단한 논리 게이트 만들기
-
-- 프로젝트 생성 및 디바이스 셋팅 아래처럼 ( 아니면 auto로 설정)
-- Cyclone IV E: EP4CE40F23C8
-- 파일이름이랑 엔터티 이름이랑 동일해야 한다.
-
-```c#
-entity fpga00 is
-    port(
-        A, B: in bit;
-        X : out bit
-    );
-    end fpga00;
-
-    architecture HB of fpga00 is
-    begin
-    x <= A AND B;
-    end HB;
-```
-
-- 문법 오류 검사하기
-- 컴파일 하기
-- RTL view로 회로 확인하기
-
-## 2. 모델심으로 시뮬레이션 하기
-
-- 임의의 입력값을 준, 코드 작성
-
-```c#
-entity fpga00_TB is
-    end fpga00_TB;
-
-    architecture TestBanch of fpga00_TB is
-
-    component fpga00
-    port(
-        A, B: in bit;
-        X : out bit
-    );
-    end component;
-
-    signal A : bit:='0';
-    signal B : bit:='0';
-    signal X : bit:='0';
-
-    begin
-        A <= '0', '1' after 100ns, '0' after 300ns, '1' after 400ns;
-        B <= '0', '1' after 200ns, '0' after 400ns, '1' after 600ns;
-
-        U1 : fpga00
-        port map(
-            A => A,
-            B => B,
-            X => X
-        );
-    end TestBanch;
-```
-
-- 이역시, 문법 오류 확인 및 컴파일하기
-- 모델심 프로젝트 생성 및 위 두개 파일 모두 임포트
-- 모두 컴파일
-- 시뮬레이션 시작 > work > test 코드 실행
-- 입력 웨이브 추가
-- run 1us // 1초동안 실행시키기
-
 # 5주차
 
 ## Half Adder
@@ -251,6 +169,47 @@ END ADDER;
 ## Full-Adder
 
 ```c#
+ENTITY Full_adder IS
+PORT(
+	A,B,CIN:IN BIT;
+	S,COUT:OUT BIT
+);
+END Full_adder;
+
+ARCHITECTURE ADDER OF Full_adder IS
+	COMPONENT half_adder IS
+	PORT(
+	A,B:IN BIT;
+	S,C:OUT BIT
+	);
+	END COMPONENT;
+
+	SIGNAL REG_C1,REG_C2 : BIT;
+	SIGNAL REG_SUM : BIT;
+BEGIN
+U1_HA: half_adder
+PORT MAP(
+	A=>A,
+	B=>B,
+	S=> REG_SUM,
+	C=>REG_C1
+);
+
+U2_HA: half_adder
+PORT MAP(
+	A=>CIN,
+	B=>REG_SUM,
+	S=> S,
+	C=>REG_C2
+);
+
+COUT <=REG_C1 OR REG_C2;
+
+END ADDER;
+
+```
+
+```
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;

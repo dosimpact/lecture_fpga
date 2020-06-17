@@ -4,15 +4,15 @@ use ieee.std_logic_unsigned.all;
 
 -- 반가산기 코드
 
-entity CLASS_32160462_FA is
+entity full_adder is
 	port(
 		X,Y,CIN: in std_logic;
 		S,COUT: out std_logic
 	);
-end CLASS_32160462_FA;
+end full_adder;
 
 
-architecture FA_A of CLASS_32160462_FA is
+architecture FA_A of full_adder is
 	component CLASS_32160462_HA is
 		port(
 			X,Y : in std_logic;

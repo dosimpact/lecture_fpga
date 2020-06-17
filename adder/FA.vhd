@@ -1,11 +1,11 @@
-ENTITY Full_adder IS
+ENTITY full_adder IS
 PORT(
 	A,B,CIN:IN BIT;
 	S,COUT:OUT BIT
 );
-END Full_adder;
+END full_adder;
 
-ARCHITECTURE ADDER OF Full_adder IS
+ARCHITECTURE ADDER OF full_adder IS
 	COMPONENT half_adder IS
 	PORT(
 	A,B:IN BIT;
