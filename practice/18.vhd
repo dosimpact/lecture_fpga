@@ -5,8 +5,7 @@ USE IEEE.std_logic_unsigned.ALL;
 
 ENTITY MR_SYSTEM IS
     PORT (
-
-        X, RESETN : IN std_logic;
+        X, RESETN, CLK : IN std_logic;
         Y : OUT std_logic_vector(1 DOWNTO 0)
     );
 END MR_SYSTEM;
@@ -15,11 +14,11 @@ ARCHITECTURE MR_SYSTEM_B OF MR_SYSTEM IS
     TYPE STATE_TYPE IS (s0, s1, s2);
     SIGNAL STATE, NEXT_STATE : STATE_TYPE;
 BEGIN
-    PROCESS (RESETN, X)
+    PROCESS (RESETN, CLK)
     BEGIN
         IF RESETN = '1' THEN
             NEXT_STATE <= s0;
-        ELSIF X'event AND X = '1' THEN
+        ELSIF CLK'event AND CLK = '1' THEN
             CASE STATE IS
                 WHEN s0 =>
                     NEXT_STATE <= s1;
