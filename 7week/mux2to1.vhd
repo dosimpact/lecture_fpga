@@ -1,33 +1,27 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.std_logic_unsigned.ALL;
 
 -- MUX 2 TO 1
 
-entity mux2to1 is
-	port(
-		i0,i1,s:in std_logic;
-		z :out std_logic
+ENTITY mux2to1 IS
+	PORT (
+		i0, i1, s : IN std_logic;
+		z : OUT std_logic
 	);
-end mux2to1;
+END mux2to1;
+ARCHITECTURE B_mux2to1 OF mux2to1 IS
+BEGIN
 
+	PROCESS (i0, i1, s)
+		CASE s IS
+			WHEN '0' =>
+				z <= i0;
+			WHEN '1' =>
+				z <= i1;
+			WHEN OTHERS =>
+				NULL;
+		END CASE;
+	END PROCESS;
 
-architecture B_mux2to1 of mux2to1 is
-begin
-
-process(i0,i1,s)
-	case s is
-		when '0'=>
-			z<=i0;
-		when '1'=>
-			z<=i1;
-		when others =>
-			null;
-	end case;
-end process;
-
-end B_mux2to1;
-
-
-
-
+END B_mux2to1;

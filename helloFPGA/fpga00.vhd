@@ -1,12 +1,12 @@
 
-entity fpga00 is
-    port(
-        A, B: in bit;
-        X : out bit
+ENTITY fpga00 IS
+    PORT (
+        A, B : IN BIT;
+        X : OUT BIT
     );
-    end fpga00;
-    
-    architecture HB of fpga00 is
-    begin
+END fpga00;
+
+ARCHITECTURE HB OF fpga00 IS
+BEGIN
     x <= A AND B;
-    end HB;
+END HB;

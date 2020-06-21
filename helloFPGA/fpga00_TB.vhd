@@ -1,27 +1,27 @@
-entity fpga00_TB is
-end fpga00_TB;
-    
-architecture TestBanch of fpga00_TB is
+ENTITY fpga00_TB IS
+END fpga00_TB;
 
-component fpga00
-    port(
-        A, B: in bit;
-        X : out bit
-    );
-end component;
+ARCHITECTURE TestBanch OF fpga00_TB IS
 
-signal A : bit:='0';
-signal B : bit:='0';
-signal X : bit:='0';
+    COMPONENT fpga00
+        PORT (
+            A, B : IN BIT;
+            X : OUT BIT
+        );
+    END COMPONENT;
 
-begin
-    A <= '0', '1' after 100ns, '0' after 300ns, '1' after 400ns;
-    B <= '0', '1' after 200ns, '0' after 400ns, '1' after 600ns;
-    
+    SIGNAL A : BIT := '0';
+    SIGNAL B : BIT := '0';
+    SIGNAL X : BIT := '0';
+
+BEGIN
+    A <= '0', '1' AFTER 100ns, '0' AFTER 300ns, '1' AFTER 400ns;
+    B <= '0', '1' AFTER 200ns, '0' AFTER 400ns, '1' AFTER 600ns;
+
     U1 : fpga00
-    port map(
+    PORT MAP(
         A => A,
         B => B,
         X => X
     );
-end TestBanch;
+END TestBanch;
