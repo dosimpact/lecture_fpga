@@ -3,46 +3,50 @@ USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE IEEE.std_logic_unsigned.ALL;
 
-ENTITY ME_SYSTEM IS
+ENTITY MR_SYSTEM IS
     PORT (
-
-        X, RESETN : IN std_logic;
+        X, RESETN, CLK : IN std_logic;
         Y : OUT std_logic_vector(1 DOWNTO 0)
     );
-END ME_SYSTEM;
+END MR_SYSTEM;
 
-ARCHITECTURE ME_SYSTEM_B OF ME_SYSTEM IS
-    TYPE STATE_TYPE IS (s0, s1);
+ARCHITECTURE MR_SYSTEM_B OF MR_SYSTEM IS
+    TYPE STATE_TYPE IS (s0, s1, s2);
     SIGNAL STATE, NEXT_STATE : STATE_TYPE;
 BEGIN
-    PROCESS (RESETN, X)
+    PROCESS (RESETN, CLK)
     BEGIN
         IF RESETN = '1' THEN
             NEXT_STATE <= s0;
-        ELSIF X'event AND X = '1' THEN
+        ELSIF CLK'event AND CLK = '1' THEN
             CASE STATE IS
                 WHEN s0 =>
                     NEXT_STATE <= s1;
                 WHEN s1 =>
+                    NEXT_STATE <= s2;
+                WHEN s2 =>
                     NEXT_STATE <= s0;
                 WHEN OTHERS =>
                     NEXT_STATE <= s0;
             END CASE;
         END IF;
     END PROCESS;
-
     STATE <= NEXT_STATE;
-
-    PROCESS (RESETN, STATE, X)
+    PROCESS (RESETN, STATE)
     BEGIN
         IF RESETN = '1' THEN
             Y <= "00";
-        ELSIF STATE = s0 AND X = '1' THEN
-            Y <= "10";
-        ELSIF STATE = s1 AND X = '1' THEN
-            Y <= "01";
         ELSE
-            Y <= "00";
+            CASE STATE IS
+                WHEN s0 =>
+                    Y <= "00";
+                WHEN s1 =>
+                    Y <= "01";
+                WHEN s2 =>
+                    Y <= "10";
+                WHEN OTHERS =>
+                    Y <= "11";
+            END CASE;
         END IF;
     END PROCESS;
-END ME_SYSTEM_B;
+END MR_SYSTEM_B;
